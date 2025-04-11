@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giao Dịch Blockchain</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+</head>
+<body>
+    
+    <header class="text-center p-3 bg-light">
+        <h1>🚀 Giao Dịch Blockchain</h1>
+        <a href="{{ url_for('home') }}" class="btn btn-secondary">🏠 Trang chủ</a>
+        <a href="{{ url_for('logout') }}" class="btn btn-danger">🚪 Đăng xuất</a>
+    </header>
+
+    <div class="container mt-4">
+        <h2 class="text-center">🔗 Blockchain Demo</h2>
+
+        <!-- Form Thêm Giao Dịch -->
+        <div class="transaction-form mt-4">
+            <h3>📩 Thêm giao dịch</h3>
+            <input type="text" id="sender" class="form-control" placeholder="Người gửi">
+            <input type="text" id="receiver" class="form-control mt-2" placeholder="Người nhận">
+            <input type="number" id="amount" class="form-control mt-2" placeholder="Số tiền">
+            <button id="addTransaction" class="btn btn-success mt-2">💰 Gửi giao dịch</button>
+        </div>
+
+        <!-- Các nút thao tác -->
+        <div class="buttons mt-4">
+            <button id="mineBlock" class="btn btn-primary">⛏️ Đào Block</button>
+            <button id="viewBlockchain" class="btn btn-secondary">📜 Xem Blockchain</button>
+        </div>
+
+        <!-- Hiển thị Blockchain -->
+        <div class="blockchain-container mt-4">
+            <h3>🔗 Blockchain:</h3>
+            <pre id="blockchainData" class="bg-light p-3 border">Chưa có dữ liệu...</pre>
+        </div>
+
+        <!-- Hiển thị Lịch sử giao dịch -->
+        <div class="transaction-list mt-4">
+            <h3>📜 Lịch sử giao dịch</h3>
+            <button id="viewTransactions" class="btn btn-info">📌 Xem giao dịch</button>
+            <table class="table table-bordered mt-2">
+                <thead>
+                    <tr>
+                        <th>Người Gửi</th>
+                        <th>Người Nhận</th>
+                        <th>Số Tiền</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionTable">
+                    <tr><td colspan="3">Chưa có giao dịch...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Script xử lý giao diện -->
+    <script>
+        // 🛑 Kiểm tra đăng nhập trước khi tải trang
+        fetch("/transactions", { credentials: "include" })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url; // Chuyển hướng nếu bị logout
+                }
+            })
+            .catch(error => console.error("Lỗi:", error));
+
+        // ✅ Gửi giao dịch mới
+        document.getElementById("addTransaction").addEventListener("click", function() {
+            const sender = document.getElementById("sender").value.trim();
+            const receiver = document.getElementById("receiver").value.trim();
+            const amount = document.getElementById("amount").value.trim();
+
+            if (!sender || !receiver || !amount || isNaN(amount) || amount <= 0) {
+                alert("⛔ Vui lòng nhập đầy đủ và hợp lệ thông tin giao dịch!");
+                return;
+            }
+
+            fetch("/add_transaction", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ sender, receiver, amount })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                fetchTransactions(); // 🆕 Cập nhật danh sách giao dịch ngay sau khi thêm
+            })
+            .catch(error => console.error("Lỗi:", error));
+        });
+
+        // 📌 Xem Blockchain
+        document.getElementById("viewBlockchain").addEventListener("click", function() {
+            fetch("/get_chain", { method: "GET", credentials: "include" })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("blockchainData").textContent = JSON.stringify(data.chain, null, 2);
+            })
+            .catch(error => console.error("Lỗi:", error));
+        });
+
+        // ⛏️ Đào Block
+        document.getElementById("mineBlock").addEventListener("click", function() {
+            fetch("/mine_block", { method: "GET", credentials: "include" })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                fetchTransactions(); // 🆕 Cập nhật lại danh sách giao dịch sau khi đào block
+                document.getElementById("blockchainData").textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => alert("Lỗi đào block: " + error.message));
+        });
+
+        // 📜 Xem lịch sử giao dịch
+        function fetchTransactions() {
+            fetch('/get_transactions')
+            .then(response => response.json())
+            .then(data => {
+                let tableBody = document.getElementById("transactionTable");
+                tableBody.innerHTML = ""; // Xóa nội dung cũ
+
+                if (!data.transactions || data.transactions.length === 0) {
+                    tableBody.innerHTML = "<tr><td colspan='3'>⚠️ Không có giao dịch nào!</td></tr>";
+                    return;
+                }
+
+                data.transactions.forEach(tx => {
+                    let row = `<tr>
+                        <td>${tx.sender}</td>
+                        <td>${tx.receiver}</td>
+                        <td>${tx.amount}</td>
+                    </tr>`;
+                    tableBody.innerHTML += row;
+                });
+            })
+            .catch(error => console.error("Lỗi tải giao dịch:", error));
+        }
+
+        // 🔄 Tự động tải lịch sử giao dịch khi trang mở
+        document.getElementById("viewTransactions").addEventListener("click", fetchTransactions);
+        fetchTransactions();
+    </script>    
+</body>
+</html>

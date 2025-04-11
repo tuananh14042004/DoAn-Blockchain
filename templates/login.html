@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="login-container blur-background">
+        <h2>Đăng nhập</h2>
+
+        <!-- 🚀 Hiển thị thông báo từ Flask -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <p class="flash flash-{{ category }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" class="auth-form">
+            <div class="input-group">
+                <input type="text" name="username" placeholder="Tên đăng nhập" required>
+            </div>
+            <div class="input-group">
+                <input type="password" name="password" placeholder="Mật khẩu" required>
+            </div>
+            <button type="submit" class="btn btn-gradient">Đăng nhập</button>
+        </form>
+        <p>Chưa có tài khoản? <a href="{{ url_for('register') }}">Đăng ký</a></p>
+    </div>
+</body>
+</html>

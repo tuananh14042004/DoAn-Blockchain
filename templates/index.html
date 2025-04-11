@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Chủ Blockchain</title>
+    
+    <!-- Liên kết CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <script>
+        function showTransactions() {
+            document.getElementById("home-content").style.display = "none"; 
+            document.getElementById("transactions-content").style.display = "block";
+        }
+
+        function goHome() {
+            document.getElementById("home-content").style.display = "block"; 
+            document.getElementById("transactions-content").style.display = "none";
+        }
+    </script>
+</head>
+<body>
+    <!-- 🌟 Phần Trang Chủ -->
+    <div id="home-content" class="container text-center mt-5 blur-background">
+        <h1>Chào mừng đến với Blockchain</h1>
+        <p>Trade Fast - Trade Smart</p>
+        <div class="button-container">
+            {% if current_user.is_authenticated %}
+                <p>Xin chào, {{ current_user.username }}!</p>
+                <a href="{{ url_for('logout') }}" class="btn btn-danger">Đăng xuất</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="btn btn-primary">Đăng nhập</a>
+                <a href="{{ url_for('register') }}" class="btn btn-secondary">Đăng ký</a>
+            {% endif %}
+        </div>   
+
+        <button onclick="showTransactions()" class="btn btn-custom mt-3">
+            📊 Xem Giao Dịch
+        </button>
+    </div>
+
+    <!-- 🌟 Phần Giao Dịch -->
+    <div id="transactions-content" class="container" style="display: none;">
+        <h1 class="text-center">🚀 Blockchain Demo</h1>
+
+        <button onclick="goHome()" class="btn btn-dark mb-3">🏠 Quay lại Trang Chủ</button>
+
+        <!-- Form nhập giao dịch -->
+        <div class="transaction-container blur-background">
+            <h2 class="section-title"><i class="fas fa-envelope"></i> Thêm giao dịch</h2>
+            <form class="transaction-form">
+                <div class="input-group">
+                    <input type="text" id="sender" placeholder="👤 Người gửi" required>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="receiver" placeholder="📩 Người nhận" required>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="amount" placeholder="💰 Số tiền" required>
+                </div>
+                <button type="submit" id="addTransaction" class="btn btn-primary">🚀 Gửi giao dịch</button>
+            </form>
+        </div>
+
+        <!-- Nút điều khiển -->
+        <div class="buttons text-center mt-3">
+            <button id="mineBlock" class="btn btn-primary">⛏️ Đào Block</button>
+            <button id="viewBlockchain" class="btn btn-secondary">📜 Xem Blockchain</button>
+        </div>
+
+        <!-- Hiển thị Blockchain -->
+        <div class="blockchain-container mt-3 blur-background">
+            <h2>🔗 Blockchain:</h2>
+            <div id="blockchainData">Chưa có dữ liệu...</div>
+        </div>
+
+        <!-- Lịch sử giao dịch -->
+        <div class="transaction-list mt-4 blur-background">
+            <h2>📜 Lịch sử giao dịch</h2>
+            <button id="viewTransactions" class="btn btn-info">📌 Xem giao dịch</button>
+            <table class="table table-bordered mt-2">
+                <thead>
+                    <tr>
+                        <th>Người Gửi</th>
+                        <th>Người Nhận</th>
+                        <th>Số Tiền</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionTable">
+                    <tr><td colspan="3">Chưa có giao dịch...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 🌟 Script Fetch API -->
+    <script>
+        // Xem danh sách Blockchain
+        document.getElementById("viewBlockchain").addEventListener("click", function() {
+            fetch("/get_chain")
+                .then(response => response.json())
+                .then(data => {
+                    let blockchainTable = document.getElementById("blockchainData");
+                    blockchainTable.innerHTML = "<h3>📜 Danh sách Block</h3>";
+
+                    data.chain.forEach(block => {
+                        blockchainTable.innerHTML += `
+                            <div class="block border p-3 mt-2 block-item">
+                                <p><b>⛓️ Block #${block.index}</b></p>
+                                <p><b>⏰ Thời gian:</b> <span class="block-content">${block.timestamp}</span></p>
+                                <p><b>🔗 Hash trước:</b> <span class="block-content">${block.previous_hash}</span></p>
+                                <p><b>📜 Giao dịch:</b> <span class="block-content">${JSON.stringify(block.transactions, null, 2)}</span></p>
+                            </div>
+                        `;
+                    });
+                })
+                .catch(error => console.error("Lỗi:", error));
+        });
+
+        // Đào Block mới
+        document.getElementById("mineBlock").addEventListener("click", function() {
+            fetch("/mine_block")
+                .then(response => response.json())
+                .then(data => {
+                    alert("⛏️ Đã đào thành công block mới!");
+                    document.getElementById("viewBlockchain").click(); // Tự động cập nhật Blockchain
+                })
+                .catch(error => console.error("Lỗi:", error));
+        });
+
+        // Thêm giao dịch
+        document.getElementById("addTransaction").addEventListener("click", function(event) {
+            event.preventDefault(); // Ngăn form submit mặc định
+            const sender = document.getElementById("sender").value;
+            const receiver = document.getElementById("receiver").value;
+            const amount = document.getElementById("amount").value;
+
+            if (!sender || !receiver || !amount) {
+                alert("Vui lòng nhập đầy đủ thông tin giao dịch!");
+                return;
+            }
+
+            fetch("/add_transaction", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ sender, receiver, amount })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                document.getElementById("sender").value = "";
+                document.getElementById("receiver").value = "";
+                document.getElementById("amount").value = "";
+                document.getElementById("viewTransactions").click(); // Tự động tải danh sách giao dịch mới
+            })
+            .catch(error => console.error("Lỗi:", error));
+        });
+
+        // Xem danh sách giao dịch
+        document.getElementById("viewTransactions").addEventListener("click", function() {
+            fetch("/get_transactions")
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById("transactionTable");
+                    tableBody.innerHTML = "";
+
+                    if (!data.transactions || !Array.isArray(data.transactions) || data.transactions.length === 0) {
+                        tableBody.innerHTML = "<tr><td colspan='3'>⚠️ Không có giao dịch nào!</td></tr>";
+                        return;
+                    }
+
+                    data.transactions.forEach(tx => {
+                        let row = `<tr>
+                            <td>${tx.sender}</td>
+                            <td>${tx.receiver}</td>
+                            <td>${tx.amount}</td>
+                        </tr>`;
+                        tableBody.innerHTML += row;
+                    });
+                })
+                .catch(error => {
+                    console.error("Lỗi:", error);
+                    document.getElementById("transactionTable").innerHTML = "<tr><td colspan='3'>❌ Lỗi tải dữ liệu giao dịch!</td></tr>";
+                });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,499 @@
+/* 🌟 Định dạng tổng thể trang */
+body {
+    background: url("../static/img/anh3.webp") no-repeat center center fixed;
+    background-size: cover;
+    font-family: "Poppins", Arial, sans-serif;
+    color: #e0e0e0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+    animation: fadeIn 1.5s ease-in-out;
+    overflow-x: hidden;
+}
+
+/* 🌟 Hiệu ứng xuất hiện mượt mà */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 🌟 Container chính với glassmorphism (giữ nguyên cho các trang khác) */
+.container {
+    width: 700px; /* Tăng chiều rộng khung lên */
+    max-width: 90%; /* Đảm bảo không bị tràn trên màn hình nhỏ */
+    margin: 50px auto;
+    padding: 40px 30px;
+    background: rgba(255, 255, 255, 0.08); /* khung mờ */
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+
+/* 🌟 Container cho đăng nhập và đăng ký (sửa để đẹp hơn) */
+.login-container, .register-container {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 40px;
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: slideUp 1.5s ease-in-out;
+}
+
+/* 🌟 Hiệu ứng chuyển động khi xuất hiện */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 🌟 Tiêu đề (sửa cho đăng nhập/đăng ký) */
+h2 {
+    color: #ffffff;
+    font-weight: 600;
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+    animation: fadeIn 1.5s ease-in-out;
+    margin-bottom: 30px;
+    font-size: 32px;
+}
+
+/* 🌟 Form đăng nhập/đăng ký (sửa để đẹp hơn) */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 🌟 Ô nhập liệu với hiệu ứng gradient viền (sửa để đẹp hơn) */
+.input-group {
+    position: relative;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="number"],
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    text-align: left;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    text-shadow: none;
+    background-clip: padding-box;
+}
+
+input:focus, .form-control:focus {
+    outline: none;
+    border: 2px solid transparent;
+    background: rgba(255, 255, 255, 0.1);
+    background-clip: padding-box;
+    box-shadow: 0 0 15px rgba(0, 255, 235, 0.5);
+    border-image: linear-gradient(45deg, #00ddeb, #ff00ff) 1;
+}
+
+input::placeholder, .form-control::placeholder {
+    color: #b0b0b0;
+    font-weight: 400;
+    text-shadow: none;
+}
+
+/* 🌟 Nút gradient (sửa để đẹp hơn) */
+.btn-gradient {
+    background: linear-gradient(45deg, #00ddeb, #ff00ff);
+    color: #fff;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+    width: 100%;
+    text-align: center;
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+.btn-gradient:hover {
+    background: linear-gradient(45deg, #ff00ff, #00ddeb);
+    transform: translateY(-3px);
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.6);
+}
+
+/* 🌟 Thông báo flash (sửa để đẹp hơn) */
+.flash-messages {
+    margin-bottom: 20px;
+}
+
+.flash {
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.flash-success {
+    background: rgba(0, 255, 0, 0.2);
+    color: #00ff00;
+    border: 1px solid rgba(0, 255, 0, 0.3);
+}
+
+.flash-danger {
+    background: rgba(255, 0, 0, 0.2);
+    color: #ff0000;
+    border: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+.flash-info {
+    background: rgba(0, 183, 235, 0.2);
+    color: #00b7eb;
+    border: 1px solid rgba(0, 183, 235, 0.3);
+}
+
+/* 🌟 Liên kết (sửa để đẹp hơn) */
+p {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+a {
+    color: #00ddeb;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease-in-out;
+}
+
+a:hover {
+    color: #ff00ff;
+    text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+}
+
+/* 🌟 Các phần khác (giữ nguyên) */
+.container.transaction-page {
+    max-width: 800px;
+}
+
+h1 {
+    font-size: 48px;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    margin-bottom: 20px;
+    animation: slideDown 1s ease-in-out;
+}
+
+h3 {
+    color: #ffffff;
+    font-weight: 600;
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+    animation: fadeIn 1.5s ease-in-out;
+    margin-bottom: 20px;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+header.bg-light {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+label {
+    color: #ffffff;
+    font-weight: 500;
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+    display: block;
+    text-align: left;
+    margin-top: 10px;
+}
+
+button, .btn {
+    background: linear-gradient(45deg, #00ddeb, #ff00ff);
+    color: #fff;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+    width: 100%;
+    text-align: center;
+    animation: fadeIn 1.5s ease-in-out;
+    margin-top: 10px;
+}
+
+button:hover, .btn:hover {
+    background: linear-gradient(45deg, #ff00ff, #00ddeb);
+    transform: translateY(-3px);
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.6);
+}
+
+.btn-custom {
+    background: linear-gradient(45deg, #00ddeb, #ff00ff);
+    color: #fff;
+    border: none;
+    padding: 10px 25px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+    transition: all 0.3s ease-in-out;
+    display: block;
+    width: 200px;
+    text-align: center;
+    margin: 20px auto 0;
+}
+
+.btn-custom:hover {
+    background: linear-gradient(45deg, #ff00ff, #00ddeb);
+    transform: translateY(-3px);
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.6);
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #00ddeb, #ff00ff);
+    border: none;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(45deg, #ff00ff, #00ddeb);
+}
+
+.btn-secondary {
+    background: linear-gradient(45deg, #333, #555);
+    border: none;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(45deg, #555, #777);
+}
+
+.btn-danger {
+    background: linear-gradient(45deg, #ff4444, #ff7777);
+    border: none;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(45deg, #ff7777, #ff4444);
+}
+
+.btn-success {
+    background: linear-gradient(45deg, #00cc00, #00ff00);
+    border: none;
+}
+
+.btn-success:hover {
+    background: linear-gradient(45deg, #00ff00, #00cc00);
+}
+
+.btn-info {
+    background: linear-gradient(45deg, #00b7eb, #00e0ff);
+    border: none;
+}
+
+.btn-info:hover {
+    background: linear-gradient(45deg, #00e0ff, #00b7eb);
+}
+
+.alert {
+    margin-bottom: 20px;
+}
+
+.alert-success {
+    background: rgba(0, 255, 0, 0.2);
+    color: #00ff00;
+    border: 1px solid rgba(0, 255, 0, 0.3);
+}
+
+.alert-danger {
+    background: rgba(255, 0, 0, 0.2);
+    color: #ff0000;
+    border: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+.alert-info {
+    background: rgba(0, 183, 235, 0.2);
+    color: #00b7eb;
+    border: 1px solid rgba(0, 183, 235, 0.3);
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+.table tr {
+    transition: all 0.3s ease-in-out;
+}
+
+.table tr:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.01);
+}
+
+.table th, .table td {
+    padding: 14px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e0e0e0;
+}
+
+.table th {
+    background: linear-gradient(45deg, #00ddeb, #ff00ff);
+    color: #fff;
+    font-weight: 600;
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+}
+
+#blockchainData {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    color: #e0e0e0;
+    text-align: left;
+    white-space: pre-wrap;
+    animation: fadeIn 1.5s ease-in-out;
+    padding: 15px;
+}
+
+.blur-background {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+.blockchain-container {
+    margin-top: 20px;
+    max-width: 100%;
+}
+
+.block-item {
+    color: #e0e0e0 !important;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(0, 255, 235, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.block-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px rgba(0, 255, 235, 0.4);
+}
+
+.block-item p {
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.block-item p b {
+    min-width: 120px;
+    color: #ffffff;
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+}
+
+.block-content {
+    flex: 1;
+    word-break: break-all;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    max-width: 100%;
+    font-size: 14px;
+    color: #d0d0d0;
+    text-align: left;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.button-container p {
+    color: #e0e0e0;
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+    margin: 0;
+}
+
+.transaction-form, .transaction-list {
+    margin-top: 20px;
+}
+
+.btn-dark {
+    background: linear-gradient(45deg, #333, #555);
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.btn-dark:hover {
+    background: linear-gradient(45deg, #555, #777);
+    transform: translateY(-3px);
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+}
