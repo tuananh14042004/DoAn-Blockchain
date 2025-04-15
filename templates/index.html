@@ -51,7 +51,7 @@
         <!-- Form nhập giao dịch -->
         <div class="transaction-container blur-background">
             <h2 class="section-title"><i class="fas fa-envelope"></i> Thêm giao dịch</h2>
-            <form class="transaction-form">
+            <form id="transactionForm" class="transaction-form">
                 <div class="input-group">
                     <input type="text" id="sender" placeholder="👤 Người gửi" required>
                 </div>
@@ -61,7 +61,7 @@
                 <div class="input-group">
                     <input type="number" id="amount" placeholder="💰 Số tiền" required>
                 </div>
-                <button type="submit" id="addTransaction" class="btn btn-primary">🚀 Gửi giao dịch</button>
+                <button type="submit" class="btn btn-primary">🚀 Gửi giao dịch</button>
             </form>
         </div>
 
@@ -126,20 +126,20 @@
                 .then(response => response.json())
                 .then(data => {
                     alert("⛏️ Đã đào thành công block mới!");
-                    document.getElementById("viewBlockchain").click(); // Tự động cập nhật Blockchain
+                    document.getElementById("viewBlockchain").click();
                 })
                 .catch(error => console.error("Lỗi:", error));
         });
 
-        // Thêm giao dịch
-        document.getElementById("addTransaction").addEventListener("click", function(event) {
-            event.preventDefault(); // Ngăn form submit mặc định
-            const sender = document.getElementById("sender").value;
-            const receiver = document.getElementById("receiver").value;
-            const amount = document.getElementById("amount").value;
+        // Gửi giao dịch
+        document.getElementById("transactionForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const sender = document.getElementById("sender").value.trim();
+            const receiver = document.getElementById("receiver").value.trim();
+            const amount = parseFloat(document.getElementById("amount").value.trim());
 
-            if (!sender || !receiver || !amount) {
-                alert("Vui lòng nhập đầy đủ thông tin giao dịch!");
+            if (!sender || !receiver || isNaN(amount) || amount <= 0) {
+                alert("⚠️ Vui lòng nhập đầy đủ và hợp lệ thông tin giao dịch!");
                 return;
             }
 
@@ -148,15 +148,23 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ sender, receiver, amount })
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw err; });
+                }
+                return response.json();
+            })
             .then(data => {
                 alert(data.message);
                 document.getElementById("sender").value = "";
                 document.getElementById("receiver").value = "";
                 document.getElementById("amount").value = "";
-                document.getElementById("viewTransactions").click(); // Tự động tải danh sách giao dịch mới
+                document.getElementById("viewTransactions").click();
             })
-            .catch(error => console.error("Lỗi:", error));
+            .catch(error => {
+                alert(error.message || "❌ Gửi giao dịch thất bại!");
+                console.error("Lỗi gửi giao dịch:", error);
+            });
         });
 
         // Xem danh sách giao dịch

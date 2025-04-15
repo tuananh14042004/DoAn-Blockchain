@@ -23,14 +23,17 @@ class Blockchain:
         self.chain.append(block)
         self.transactions = []  # Reset transactions sau khi tạo block
         return block
-
     def add_transaction(self, sender, receiver, amount, transaction_name):
-        self.transactions.append({
+        transaction = {
             'sender': sender,
             'receiver': receiver,
-            'amount': amount,
-            'transaction_name': transaction_name  # Thêm trường mới
-        })
+            'amount': amount
+        }
+        if transaction_name:
+            transaction['name'] = transaction_name
+
+        self.transactions.append(transaction)
+
 
     def get_all_transactions(self):
         # Trả về tất cả giao dịch, bao gồm cả trong chain và transactions chưa được đào

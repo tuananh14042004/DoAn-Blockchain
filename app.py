@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for, f
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask import Flask, request, jsonify
 import json
 from blockchain import Blockchain  # ✅ Import blockchain từ file blockchain.py
 
@@ -44,29 +45,29 @@ def home():
 def transaction():
     return render_template('transactions.html')
 
-# 📌 Route: Thêm giao dịch vào blockchain (CHỈ CHO NGƯỜI DÙNG ĐÃ ĐĂNG NHẬP)
 @app.route('/add_transaction', methods=['POST'])
-@login_required
 def add_transaction():
     data = request.get_json()
-    sender = current_user.username  # ✅ Người gửi là user đang đăng nhập
-    receiver = data.get("receiver", "").strip()
-    amount = data.get("amount")
-    transaction_name = data.get("transaction_name", "").strip()  # Thêm trường tên giao dịch
+    print("Dữ liệu nhận được:", data)
 
-    # ⚠️ Kiểm tra dữ liệu đầu vào
-    if not sender or not receiver or not amount or not transaction_name:
-        return jsonify({"message": "⚠️ Thiếu dữ liệu giao dịch!"}), 400
-    try:
-        amount = float(amount)
-        if amount <= 0:
-            return jsonify({"message": "⚠️ Số tiền phải lớn hơn 0!"}), 400
-    except ValueError:
-        return jsonify({"message": "⚠️ Số tiền không hợp lệ!"}), 400
+    if not data:
+        return jsonify({'message': '⚠️ Dữ liệu không hợp lệ!'}), 400
 
-    # 🟢 Thêm giao dịch vào blockchain
+    required_fields = ['sender', 'receiver', 'amount']
+    if not all(field in data and data[field] != "" for field in required_fields):
+        return jsonify({'message': '⚠️ Thiếu thông tin giao dịch bắt buộc!'}), 400
+
+
+
+    sender = data['sender']
+    receiver = data['receiver']
+    amount = data['amount']
+    transaction_name = data.get('transaction_name', '')
+
+    # ✅ Thêm giao dịch
     blockchain.add_transaction(sender, receiver, amount, transaction_name)
-    return jsonify({"message": "✅ Giao dịch đã được thêm thành công!"}), 201
+
+    return jsonify({'message': '✅ Giao dịch đã được thêm thành công!'}), 200
 
 # 📌 Route: Đào block mới (CHỈ CHO NGƯỜI DÙNG ĐÃ ĐĂNG NHẬP)
 @app.route('/mine_block', methods=['GET'])
